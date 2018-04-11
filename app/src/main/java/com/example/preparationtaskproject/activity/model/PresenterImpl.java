@@ -24,7 +24,6 @@ import retrofit2.Response;
 public class PresenterImpl implements PresenterInt {
     ViewInt viewInt;
     UserApiMethods userApiMethods;
-    String emailInput,passwordInput;
     Context context;
 
     public PresenterImpl(ViewInt viewInt, Context context) {
@@ -52,19 +51,19 @@ public class PresenterImpl implements PresenterInt {
                 @Override
                 public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                     if (response.isSuccessful()) {
-                        //Response userResponse = response.body();
-                        Log.i("result",new Gson().toJson(response)+ response.code());
-                       // if (!response.message().isEmpty()) {
+                        UserResponse userResponse = response.body();
+                        Log.i("result", new Gson().toJson(response) + response.code());
+                        if (userResponse.getMessage().equals("login success")) {
                             SharedPreferences sharedPreferences = context.getSharedPreferences("tag", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putBoolean("flag", true);
                             editor.commit();
                             viewInt.loginSuccess();
-                        }
-                        else {
+                        } else {
                             viewInt.loginFailed();
                         }
                     }
+                }
 
 
                 @Override
