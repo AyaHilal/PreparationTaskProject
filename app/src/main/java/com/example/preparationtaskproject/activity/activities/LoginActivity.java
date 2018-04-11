@@ -19,6 +19,8 @@ import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity implements ViewInt {
 
+
+    int x;
     PresenterInt presenterInt;
     @BindView(R.id.username) EditText userName;
     @BindView(R.id.password) EditText password;
@@ -36,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements ViewInt {
         ButterKnife.bind(this);
         SharedPreferences sharedPreferences = getSharedPreferences("tag",MODE_PRIVATE);
         boolean flag = sharedPreferences.getBoolean("flag",false);
-        if(flag==true)
+        if(flag)
         {
             loginSuccess();
         }
