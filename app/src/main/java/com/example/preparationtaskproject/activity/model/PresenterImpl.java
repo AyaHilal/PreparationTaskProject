@@ -53,7 +53,7 @@ public class PresenterImpl implements PresenterInt {
                     if (response.isSuccessful()) {
                         UserResponse userResponse = response.body();
                         Log.i("result", new Gson().toJson(response) + response.code());
-                        if (userResponse.getMessage().equals("login success")) {
+                        if (userResponse.getMessage().equals("Login Success")) {
                             SharedPreferences sharedPreferences = context.getSharedPreferences("tag", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putBoolean("flag", true);
