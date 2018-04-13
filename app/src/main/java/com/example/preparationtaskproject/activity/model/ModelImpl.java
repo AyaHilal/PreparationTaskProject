@@ -21,32 +21,23 @@ import retrofit2.Response;
  * Created by Aya on 08/04/2018.
  */
 
-public class PresenterImpl implements PresenterInt {
-    ViewInt viewInt;
+public class ModelImpl implements ModelInt {
+
     UserApiMethods userApiMethods;
-    Context context;
-
-    public PresenterImpl(ViewInt viewInt, Context context) {
-        this.viewInt = viewInt;
-        this.context=context;
-    }
-
+    PresenterInt presenterInt;
+    int result;
     @Override
-    public void validateInput(final String name, final String password) {
-       User user = new User(name,password);
+    public int validateInput(final String name, final String password, final Context context) {
+        User user = new User(name, password);
         userApiMethods = UserApi.getApiUser().create(UserApiMethods.class);
-        Call<UserResponse> responseCall=userApiMethods.postUser(user);
-        if(TextUtils.isEmpty(name)||TextUtils.isEmpty(password))
-        {
-            viewInt.emptyFields();
-        }
-        else if(!Patterns.EMAIL_ADDRESS.matcher(name).matches())
-        {
-            viewInt.invalidMail();
+        Call<UserResponse> responseCall = userApiMethods.postUser(user);
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(password)) {
+            result = 0;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(name).matches()) {
+            result = 1;
         }
         //el invalid bta3 el check mn el json
-        else
-        {
+        else {
             responseCall.enqueue(new Callback<UserResponse>() {
                 @Override
                 public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -58,22 +49,20 @@ public class PresenterImpl implements PresenterInt {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putBoolean("flag", true);
                             editor.commit();
-                            viewInt.loginSuccess();
-                        } else {
-                            viewInt.loginFailed();
+                            result = 2;
                         }
                     }
                 }
 
-
                 @Override
                 public void onFailure(Call<UserResponse> call, Throwable t) {
-                    viewInt.loginFailed();
+                    result = 3;
                 }
             });
-            }
         }
-
+        return result;
     }
+
+}
 
 
