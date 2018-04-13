@@ -2,6 +2,7 @@ package com.example.preparationtaskproject.activity.presenter;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.preparationtaskproject.activity.model.ModelImpl;
 import com.example.preparationtaskproject.activity.model.ModelInt;
@@ -30,9 +31,11 @@ public class PresenterImpl implements PresenterInt{
         mail=viewInt.getMail(context);
         password=viewInt.getPassword(context);
         validationValue= modelInt.validateInput(mail,password,context);
+        modelInt.resetResult();
+        //Toast.makeText(context,"mail is"+ mail +"password is"+password+"validation value is"+validationValue,Toast.LENGTH_LONG).show();
         if(validationValue==0)
         {
-            viewInt.emptyFields();
+           viewInt.emptyFields();
         }
         else if(validationValue==1)
         {
@@ -44,7 +47,11 @@ public class PresenterImpl implements PresenterInt{
         }
         else if(validationValue==3)
         {
-            viewInt.loginFailed();
+           viewInt.loginFailed();
         }
+        else{
+           viewInt.waiting();
+        }
+
     }
 }

@@ -25,7 +25,8 @@ public class ModelImpl implements ModelInt {
 
     UserApiMethods userApiMethods;
     PresenterInt presenterInt;
-    int result;
+    int result=-1;
+
     @Override
     public int validateInput(final String name, final String password, final Context context) {
         User user = new User(name, password);
@@ -62,6 +63,12 @@ public class ModelImpl implements ModelInt {
         }
         return result;
     }
+
+    public void resetResult(){
+        result=-1;
+    }
+
+
 
 }
 

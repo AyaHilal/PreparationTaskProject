@@ -8,4 +8,6 @@ import android.content.Context;
 
 public interface ModelInt {
     public int validateInput(final String name, final String password, Context context);
+    public void resetResult();
 }
+

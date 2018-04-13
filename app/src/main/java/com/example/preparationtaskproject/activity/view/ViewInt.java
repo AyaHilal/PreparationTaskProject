@@ -13,4 +13,5 @@ public interface ViewInt {
     public void invalidMail();
     public String getMail(Context context);
     public String getPassword(Context context);
+    public void waiting ();
 }

@@ -91,6 +91,12 @@ public class LoginActivity extends AppCompatActivity implements ViewInt {
         return passwordInput;
     }
 
+    @Override
+    public void waiting() {
+        Toast.makeText(this,"please wait to check your data and press again on login button!",Toast.LENGTH_LONG).show();
+
+    }
+
     public boolean checkInternetConnection()
     {
         boolean status = false;
