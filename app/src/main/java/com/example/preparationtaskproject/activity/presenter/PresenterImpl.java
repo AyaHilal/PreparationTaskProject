@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.preparationtaskproject.activity.model.ModelImpl;
 import com.example.preparationtaskproject.activity.model.ModelInt;
+import com.example.preparationtaskproject.activity.pojo.UserResponse;
 import com.example.preparationtaskproject.activity.view.ViewInt;
 
 /**
@@ -23,25 +24,23 @@ public class PresenterImpl implements PresenterInt{
     public PresenterImpl(ViewInt viewInt, Context context) {
         this.viewInt = viewInt;
         this.context=context;
-        modelInt=new ModelImpl();
+        modelInt=new ModelImpl(this);
     }
 
     @Override
-    public void sendData(ViewInt viewInt,Context context) {
-        mail=viewInt.getMail(context);
-        password=viewInt.getPassword(context);
+    public void sendData(String mail,String password,Context context) {
         validationValue= modelInt.validateInput(mail,password,context);
         modelInt.resetResult();
         //Toast.makeText(context,"mail is"+ mail +"password is"+password+"validation value is"+validationValue,Toast.LENGTH_LONG).show();
-        if(validationValue==0)
-        {
-           viewInt.emptyFields();
-        }
-        else if(validationValue==1)
-        {
-            viewInt.invalidMail();
-        }
-        else if(validationValue==2)
+//        if(validationValue==0)
+//        {
+//           viewInt.emptyFields();
+//        }
+//        else if(validationValue==1)
+//        {
+//            viewInt.invalidMail();
+//        }
+        if(validationValue==2)
         {
             viewInt.loginSuccess();
         }
@@ -52,6 +51,11 @@ public class PresenterImpl implements PresenterInt{
         else{
            viewInt.waiting();
         }
+
+    }
+
+    @Override
+    public void onSuccess(UserResponse userResponse) {
 
     }
 }

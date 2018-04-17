@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.Patterns;
 import com.example.preparationtaskproject.activity.pojo.User;
 import com.example.preparationtaskproject.activity.pojo.UserResponse;
+import com.example.preparationtaskproject.activity.presenter.PresenterImpl;
 import com.example.preparationtaskproject.activity.presenter.PresenterInt;
 import com.example.preparationtaskproject.activity.view.ViewInt;
 import com.google.gson.Gson;
@@ -26,41 +27,44 @@ public class ModelImpl implements ModelInt {
     UserApiMethods userApiMethods;
     PresenterInt presenterInt;
     int result=-1;
+    PresenterInt presenter;
+    public ModelImpl(PresenterInt presenter) {
+        this.presenter = presenter;
+    }
 
     @Override
     public int validateInput(final String name, final String password, final Context context) {
         User user = new User(name, password);
         userApiMethods = UserApi.getApiUser().create(UserApiMethods.class);
         Call<UserResponse> responseCall = userApiMethods.postUser(user);
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(password)) {
-            result = 0;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(name).matches()) {
-            result = 1;
-        }
-        //el invalid bta3 el check mn el json
-        else {
-            responseCall.enqueue(new Callback<UserResponse>() {
-                @Override
-                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                    if (response.isSuccessful()) {
-                        UserResponse userResponse = response.body();
-                        Log.i("result", new Gson().toJson(response) + response.code());
-                        if (userResponse.getMessage().equals("Login Success")) {
-                            SharedPreferences sharedPreferences = context.getSharedPreferences("tag", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean("flag", true);
-                            editor.commit();
-                            result = 2;
-                        }
+//        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(password)) {
+//            result = 0;
+//        } else if (!Patterns.EMAIL_ADDRESS.matcher(name).matches()) {
+//            result = 1;
+//        }
+//        //el invalid bta3 el check mn el json
+        responseCall.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful()) {
+                    UserResponse userResponse = response.body();
+                    presenter.onSuccess(userResponse);
+                    //Log.i("result", new Gson().toJson(response) + response.code());
+                    if (userResponse.getMessage().equals("Login Success")) {
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("tag", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("flag", true);
+                        editor.commit();
+                        result = 2;
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<UserResponse> call, Throwable t) {
-                    result = 3;
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                result = 3;
+            }
+        });
         return result;
     }
 

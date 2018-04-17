@@ -11,6 +11,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -35,11 +37,25 @@ public class LoginActivity extends AppCompatActivity implements ViewInt {
     public void submit() {
         boolean resultConnection =checkInternetConnection();
         if(resultConnection==true) {
-            presenterInt.sendData(LoginActivity.this, this);
+            //presenterInt.sendData(LoginActivity.this, this);
+            userNameInput = userName.getText().toString();
+            passwordInput = password.getText().toString();
+            if (TextUtils.isEmpty(userNameInput) || TextUtils.isEmpty(passwordInput)) {
+
+                emptyFields();
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(userNameInput).matches()) {
+                invalidMail();
+            }
+            //el invalid bta3 el check mn el json
+            else {
+
+                presenterInt.sendData(userNameInput,passwordInput,this);
+
+            }
         }
         else
         {
-            Toast.makeText(this,"please check your internet connection",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getResources().getString(R.string.network_error_message),Toast.LENGTH_LONG).show();
         }
     }
     @Override
@@ -52,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements ViewInt {
             if (flag) {
                 loginSuccess();
             } else {
-                presenterInt = new PresenterImpl(LoginActivity.this, this);
+                presenterInt = new PresenterImpl(this, this);
             }
     }
 
@@ -65,35 +81,35 @@ public class LoginActivity extends AppCompatActivity implements ViewInt {
 
     @Override
     public void loginFailed() {
-        Toast.makeText(this,"email or password is incorrect",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,getResources().getString(R.string.invalid_login),Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void emptyFields() {
-        Toast.makeText(this,"please enter mail and password",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,getResources().getString(R.string.empty_fields),Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void invalidMail() {
-        Toast.makeText(this,"please enter valid mail",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,getResources().getString(R.string.invalid_mail),Toast.LENGTH_LONG).show();
 
     }
 
-    @Override
-    public String getMail(Context context) {
-        userNameInput  = userName.getText().toString();
-        return userNameInput;
-    }
-
-    @Override
-    public String getPassword(Context context) {
-        passwordInput = password.getText().toString();
-        return passwordInput;
-    }
+//    @Override
+//    public String getMail(Context context) {
+//        userNameInput  = userName.getText().toString();
+//        return userNameInput;
+//    }
+//
+//    @Override
+//    public String getPassword(Context context) {
+//        passwordInput = password.getText().toString();
+//        return passwordInput;
+//    }
 
     @Override
     public void waiting() {
-        Toast.makeText(this,"please wait to check your data and press again on login button!",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,getResources().getString(R.string.load_retrofit),Toast.LENGTH_LONG).show();
 
     }
 

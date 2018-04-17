@@ -11,7 +11,7 @@ public interface ViewInt {
     public void loginFailed();
     public void emptyFields();
     public void invalidMail();
-    public String getMail(Context context);
-    public String getPassword(Context context);
+//    public String getMail(Context context);
+//    public String getPassword(Context context);
     public void waiting ();
 }

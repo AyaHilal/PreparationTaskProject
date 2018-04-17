@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.example.preparationtaskproject.activity.pojo.User;
+import com.example.preparationtaskproject.activity.pojo.UserResponse;
 import com.example.preparationtaskproject.activity.view.ViewInt;
 
 /**
@@ -11,5 +12,7 @@ import com.example.preparationtaskproject.activity.view.ViewInt;
  */
 
 public interface PresenterInt {
-    public void sendData(ViewInt viewInt, Context context);
+    public void sendData(String mail,String password, Context context);
+
+    void onSuccess(UserResponse userResponse);
 }
