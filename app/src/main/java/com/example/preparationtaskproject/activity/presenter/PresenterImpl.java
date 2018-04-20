@@ -21,6 +21,7 @@ public class PresenterImpl implements PresenterInt{
     ModelInt modelInt;
     Context context;
     int validationValue;
+    int res;
     public PresenterImpl(ViewInt viewInt, Context context) {
         this.viewInt = viewInt;
         this.context=context;
@@ -29,33 +30,24 @@ public class PresenterImpl implements PresenterInt{
 
     @Override
     public void sendData(String mail,String password,Context context) {
-        validationValue= modelInt.validateInput(mail,password,context);
-        modelInt.resetResult();
-        //Toast.makeText(context,"mail is"+ mail +"password is"+password+"validation value is"+validationValue,Toast.LENGTH_LONG).show();
-//        if(validationValue==0)
-//        {
-//           viewInt.emptyFields();
-//        }
-//        else if(validationValue==1)
-//        {
-//            viewInt.invalidMail();
-//        }
-        if(validationValue==2)
+        modelInt.validateInput(mail,password,context);
+    }
+
+
+    @Override
+    public void returnResult(int result) {
+        if(result==2)
         {
             viewInt.loginSuccess();
         }
-        else if(validationValue==3)
+        else if(result==3)
         {
-           viewInt.loginFailed();
+            viewInt.loginFailed();
         }
-        else{
-           viewInt.waiting();
+        else
+        {
+            viewInt.waiting();
         }
-
-    }
-
-    @Override
-    public void onSuccess(UserResponse userResponse) {
 
     }
 }

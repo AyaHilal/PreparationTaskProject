@@ -33,7 +33,7 @@ public class ModelImpl implements ModelInt {
     }
 
     @Override
-    public int validateInput(final String name, final String password, final Context context) {
+    public void validateInput(final String name, final String password, final Context context) {
         User user = new User(name, password);
         userApiMethods = UserApi.getApiUser().create(UserApiMethods.class);
         Call<UserResponse> responseCall = userApiMethods.postUser(user);
@@ -48,7 +48,6 @@ public class ModelImpl implements ModelInt {
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.isSuccessful()) {
                     UserResponse userResponse = response.body();
-                    presenter.onSuccess(userResponse);
                     //Log.i("result", new Gson().toJson(response) + response.code());
                     if (userResponse.getMessage().equals("Login Success")) {
                         SharedPreferences sharedPreferences = context.getSharedPreferences("tag", Context.MODE_PRIVATE);
@@ -56,6 +55,7 @@ public class ModelImpl implements ModelInt {
                         editor.putBoolean("flag", true);
                         editor.commit();
                         result = 2;
+                        presenter.returnResult(result);
                     }
                 }
             }
@@ -63,13 +63,14 @@ public class ModelImpl implements ModelInt {
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
                 result = 3;
+                presenter.returnResult(result);
             }
         });
-        return result;
     }
 
     public void resetResult(){
         result=-1;
+        presenter.returnResult(result);
     }
 
 

@@ -13,6 +13,5 @@ import com.example.preparationtaskproject.activity.view.ViewInt;
 
 public interface PresenterInt {
     public void sendData(String mail,String password, Context context);
-
-    void onSuccess(UserResponse userResponse);
+    public void returnResult(int result);
 }
